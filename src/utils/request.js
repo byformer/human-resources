@@ -4,8 +4,18 @@ const service = axios.create({
     baseURL:process.env.VUE_APP_BASE_API,
     timeout:5000 // 设置超时时间
 })
+// 请求拦截器
+service.interceptors.request.use(config =>{
+
+    //  注入token
+    if(stroe.getters.token){
+      config.headers['Authorization'] = `Bearer ${stroe.getters.token}`
+    }
+    return config  // config 必须要返回的
+},error=>{
+  return Promise.reject(error)
+})
 // 响应拦截器
-service.interceptors.request.use()
 service.interceptors.response.use(response =>{
     // axios默认加了一层data
   const {success,message,data} = response.data
