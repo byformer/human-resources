@@ -17,7 +17,8 @@ service.interceptors.request.use(config => {
   return Promise.reject(error)
 }) 
 // 响应拦截器
-service.interceptors.response.use(response =>{
+service.interceptors.response.use(
+  response =>{
     // axios默认加了一层data
   const {success,message,data} = response.data
   if(success){
@@ -30,5 +31,6 @@ service.interceptors.response.use(response =>{
     Message.error(error.message)   // 提示错误信息
     return Promise.reject(error)   // 返回执行错误，让当前的执行链跳出成功，直接进入catch
     
-})
+ }
+)
 export default service
