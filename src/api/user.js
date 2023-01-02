@@ -20,7 +20,8 @@ return request({
     url: '/sys/profile',
     method: 'post'
   })
-}
+  
+ }
 
 export function logout() {
  

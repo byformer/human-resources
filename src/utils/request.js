@@ -6,6 +6,7 @@ const service = axios.create({
     timeout:5000 // 设置超时时间
 })
 // 请求拦截器
+
 service.interceptors.request.use(config => {
   // 在这个位置需要统一的去注入token
   if (store.getters.token) {

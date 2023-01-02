@@ -22,12 +22,15 @@ const mutations = {
     state.userInfo = result // 这样是响应式
   },
   removeUserInfo(state){
-    state.userInfo = {}
-  }
+
+    // 更新一个对象
+    state.userInfo = result     // 这样是响应式
+  },
+ 
 }
 
 const actions = {
- async login(context, data) {
+  async login(context, data) {
     // 调用api接口
    const result = await login(data) // 拿到token
       // console.log(context,data);
@@ -44,7 +47,9 @@ const actions = {
     async logout(){
 
     }
-}
+  }
+
+
 export default {
   namespaced: true,
   state,
