@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from "@/utils/auth"
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo,getUserDetailById } from '@/api/user'
 
 // 状态
 const state = {
@@ -40,8 +40,10 @@ const actions = {
     // 获取用户资料action
     async getUserInfo (context) {
       const result = await getUserInfo()  // 获取返回值
-      
-      context.commit('setUserInfo', result) // 将整个的个人信息设置到用户的vuex数据中
+      // 获取用户详情
+      const baseInfo = await getUserDetailById(result.userId)
+      const obj = {...result,...baseInfo}  
+      context.commit('setUserInfo', obj) // 将整个的个人信息设置到用户的vuex数据中
       return result // 这里为什么要返回 为后面埋下伏笔
     },
     async logout(){

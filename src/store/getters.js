@@ -5,7 +5,8 @@ const getters = {
   avatar: state => state.app.avatar,
 
   name:state => state.user.userInfo.username,  // 建立对于用户名的快捷访问
-  userId:state => state.user.userInfo.userId,  
+  userId:state => state.user.userInfo.userId,  // 用户id
+  staffPhoto:state => state.user.userInfo.staffPhoto, // 建立用户头像快捷访问
 
 
 }
