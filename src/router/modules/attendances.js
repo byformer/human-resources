@@ -11,6 +11,7 @@ export default {
         // 路由元信息，其实就是储存数据的对象，可以放任何内容
         meta:{
             title:"考勤", // 这里用title是因为左侧导航读取了这里的title属性
+            icon:'skill'
         }
     }]
 }
