@@ -49,6 +49,8 @@ export default {
       operateDepts(type){
         if(type === 'add'){
           // 添加子部门
+          // 在当前点击的部门添加子部门
+          this.$emit('addDepts',this.treeNode) // 触发一个自定义事件，告诉父组件显示弹窗
         }else if(type === 'edit'){
           // 编辑部门
         }else{
