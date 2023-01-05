@@ -7,3 +7,13 @@ export function getDepartments (){
         method:'GET'
     })
 }
+
+//  删除组织架构部门
+
+export function delDepartments(id){
+    return request({
+        url:`/company/department/${id}`,
+        method:'delete',  // 接口满足result接口规范
+
+    })
+}

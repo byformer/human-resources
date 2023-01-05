@@ -11,7 +11,7 @@
           :props="defaultProps"
           :default-expand-all="true"
         >
-          <TreeTools slot-scope="{ data }" :treeNode="data" />
+          <TreeTools slot-scope="{ data }" :treeNode="data" @delDepts="getDepartments" />
         </el-tree>
       </el-card>
     </div>
