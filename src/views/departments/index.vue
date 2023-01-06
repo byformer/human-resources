@@ -16,7 +16,7 @@
       </el-card>
     </div>
     <!-- 放置新增弹层 -->
-    <AddDepartments :showDialog="showDialog" :treeNode="node" />
+    <AddDepartments :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"  />
   </div>
 </template>
 
@@ -52,7 +52,8 @@ export default {
     addDepts(node){
       this.showDialog = true// 显示弹窗
       this.node = node 
-    }
+    },
+   
   },
   components: {
     TreeTools,

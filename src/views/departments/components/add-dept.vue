@@ -2,8 +2,9 @@
   <!-- 弹层组件 -->
   <el-dialog title="新增部门" :visible="showDialog">
     <!-- 表单数据 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
-      <!-- label-width 设置所有标题宽度 -->
+        <!-- label-width 设置所有标题宽度 -->
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
+  
       <el-form-item  label="部门名称"  prop="name">
         <el-input v-model="formData.name" style="width: 80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -32,14 +33,14 @@
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
         <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">确定</el-button>
+        <el-button size="small" type="primary" @click="btnOk">确定</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import {getDepartments} from "@/api/departments"
+import {getDepartments,addDepartments} from "@/api/departments"
 import {getSimple} from "@/api/employees"
 export default {
   props: {
@@ -95,6 +96,20 @@ export default {
   methods:{
      async getSimple(){
         this.peoples =  await getSimple()
+      },
+      btnOk(){
+          this.$refs.deptForm.validate(async isOK =>{
+            if(isOK){
+              // 表单通过
+              await addDepartments({...this.formData,pid:this.treeNode.id})
+              // 告诉父组件更新数据
+              this.$emit('addDepts') // 触发自定义事件
+
+              // 此时应该去修改showdialog
+              // update: 固定写法，然后给父组件加上修饰符.sync
+              this.$emit('update:showDialog',false)
+            }
+          })
       }
   }
 };
