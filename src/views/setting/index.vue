@@ -13,13 +13,32 @@
             </el-row>
             <!-- 给表格绑定数据 -->
             <el-table border="" :data="list">
-              <el-table-column type="index" align="center" prop="id" label="序号" width="120" />
-              <el-table-column prop="name" align="center" label="名称" width="240" />
+              <el-table-column
+                type="index"
+                align="center"
+                prop="id"
+                label="序号"
+                width="120"
+              />
+              <el-table-column
+                prop="name"
+                align="center"
+                label="名称"
+                width="240"
+              />
               <el-table-column prop="description" align="center" label="描述" />
-              <el-table-column  label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+              <el-table-column label="操作">
+                <!-- 作用域插槽 -->
+                <template slot-scope="{ row }">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="deleteRole(row.id)"
+                    >删除</el-button
+                  >
+                </template>
               </el-table-column>
             </el-table>
             <!-- 放置分页组件 -->
@@ -46,33 +65,66 @@
               :closable="false"
             />
             <!-- 右侧内容  -->
-            <el-form  label-width="120px" style="margin-top: 50px">
+            <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
                 <el-input v-model="formData.name" disabled style="400px" />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input v-model="formData.companyAddress" disabled style="400px" />
+                <el-input
+                  v-model="formData.companyAddress"
+                  disabled
+                  style="400px"
+                />
               </el-form-item>
               <el-form-item label="电话">
-                <el-input v-model="formData.companyPhone" disabled style="400px" />
+                <el-input
+                  v-model="formData.companyPhone"
+                  disabled
+                  style="400px"
+                />
               </el-form-item>
               <el-form-item label="邮箱">
                 <el-input v-model="formData.mailbox" disabled style="400px" />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="formData.remarks" type="textarea" :rows="3" disabled style="400px" />
+                <el-input
+                  v-model="formData.remarks"
+                  type="textarea"
+                  :rows="3"
+                  disabled
+                  style="400px"
+                />
               </el-form-item>
             </el-form>
           </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
+    <!-- 放置一个弹窗组件 -->
+    <el-dialog title="编辑部门" :visible="showDialog">
+      <el-form :model="roleForm" :rules="rules" label-width="120px">
+       <el-form-item prop="name" label="角色名称">
+          <el-input v-model="roleForm.name" />
+      </el-form-item> 
+
+      <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+      </el-form-item> 
+      </el-form>
+      <!-- 放置footer插槽 -->
+      <el-row type="flex" justify="center">
+        <el-col :span="8">
+          <el-button size="small">取消</el-button>
+          <el-button type="primary" size="small">确认</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList,getCompanyInfo } from '@/api/setting'
-import {mapGetters} from "vuex"
+import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -83,14 +135,22 @@ export default {
         pageSize: 10,
         total: 0
       },
-      formData:{
+      formData: {
         // 公司信息
+      },
+      showDialog:false,  // 控制弹层显示
+      roleForm:{
+        name:'', // 角色名称
+        description:'', // 角色描述
+      },
+      rules:{
+        name:[{required:true,message:'角色名称不能为空',trigger:'blur'}]
       }
     }
   },
   created() {
- this.getRoleList() //获取角色列表
-  this.getCompanyInfo()
+    this.getRoleList() //获取角色列表
+    this.getCompanyInfo()
   },
   methods: {
     async getRoleList() {
@@ -98,17 +158,31 @@ export default {
       this.page.total = total
       this.list = rows
     },
-    async getCompanyInfo(){
-        this.formData =   await getCompanyInfo(this.companyId)
+    async getCompanyInfo() {
+      this.formData = await getCompanyInfo(this.companyId)
     },
-    changePage(newPage){
+    changePage(newPage) {
       // newPage是当前点击的对象
       this.page.page = newPage
       this.getRoleList()
-      
-    } 
+    },
+    async deleteRole(id) {
+      // 提示
+      try {
+        await this.$confirm('确认删除该角色吗')
+        //  只有点击了确定才能到下方
+        await deleteRole(id) // 调用删除接口
+        this.getRoleList() // 重新加载
+        this.$confirm('删除角色成功！')
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    editRole(id){
+        this.showDialog = true
+    }
   },
-  computed:{
+  computed: {
     ...mapGetters(['companyId'])
   }
 }
