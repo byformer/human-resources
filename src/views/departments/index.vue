@@ -11,12 +11,12 @@
           :props="defaultProps"
           :default-expand-all="true"
         >
-          <TreeTools slot-scope="{ data }" :treeNode="data" @addDepts="addDepts" @delDepts="getDepartments" />
+          <TreeTools @editDepts="editDepts" slot-scope="{ data }" :treeNode="data" @addDepts="addDepts" @delDepts="getDepartments" />
         </el-tree>
       </el-card>
     </div>
     <!-- 放置新增弹层 -->
-    <AddDepartments :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"  />
+    <AddDepartments ref="addDept" :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"  />
   </div>
 </template>
 
@@ -53,7 +53,13 @@ export default {
       this.showDialog = true// 显示弹窗
       this.node = node 
     },
-   
+    // 编辑部门
+   editDepts(node){ 
+      this.showDialog = true // 弹出层
+      this.node = node  // 赋值操作的节点
+      // 调用获取部门详情方法
+      this.$refs.addDept.getDepartDetail(node.id)
+   }
   },
   components: {
     TreeTools,

@@ -53,6 +53,7 @@ export default {
           this.$emit('addDepts',this.treeNode) // 触发一个自定义事件，告诉父组件显示弹窗
         }else if(type === 'edit'){
           // 编辑部门
+          this.$emit('editDepts',this.treeNode)  // 触发自定义事件，点击谁编辑谁
         }else{
           // 删除
          this.$confirm("您确定要删除该组织部门吗").then(()=> {
