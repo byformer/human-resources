@@ -11,11 +11,12 @@
                 >新增角色</el-button
               >
             </el-row>
-            <el-table border="">
-              <el-table-column label="序号" width="120" />
-              <el-table-column label="名称" width="240" />
-              <el-table-column label="描述" />
-              <el-table-column label="操作">
+            <!-- 给表格绑定数据 -->
+            <el-table border="" :data="list">
+              <el-table-column type="index" align="center" prop="id" label="序号" width="120" />
+              <el-table-column prop="name" align="center" label="名称" width="240" />
+              <el-table-column prop="description" align="center" label="描述" />
+              <el-table-column  label="操作">
                 <el-button size="small" type="success">分配权限</el-button>
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger">删除</el-button>
@@ -28,31 +29,37 @@
               style="height: 60px"
               align="middle"
             >
-              <el-pagination layout="prev,pager,next" />
+              <el-pagination
+                :total="page.total"
+                :page-size="page.pageSize"
+                :current-page="page.page"
+                @current-change="changePage"
+                layout="prev,pager,next"
+              />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="公司信息">
-                <el-alert
+            <el-alert
               title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改"
               type="info"
               show-icon
               :closable="false"
             />
             <!-- 右侧内容  -->
-            <el-form label-width="120px" style="margin-top:50px">
+            <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
                 <el-input disabled style="400px" />
               </el-form-item>
-                <el-form-item label="公司地址">
+              <el-form-item label="公司地址">
                 <el-input disabled style="400px" />
               </el-form-item>
-                <el-form-item label="电话">
+              <el-form-item label="电话">
                 <el-input disabled style="400px" />
               </el-form-item>
-                <el-form-item label="邮箱">
+              <el-form-item label="邮箱">
                 <el-input disabled style="400px" />
               </el-form-item>
-                <el-form-item label="备注">
+              <el-form-item label="备注">
                 <el-input type="textarea" :rows="3" disabled style="400px" />
               </el-form-item>
             </el-form>
@@ -64,7 +71,36 @@
 </template>
 
 <script>
-export default {}
+import { getRoleList } from '@/api/setting'
+export default {
+  data() {
+    return {
+      list: [], // 承接数组
+      page: {
+        // 放置页码及数据
+        page: 1,
+        pageSize: 10,
+        total: 0
+      }
+    }
+  },
+  created() {
+    this.getRoleList() //获取角色列表
+  },
+  methods: {
+    async getRoleList() {
+      const { total, rows } = await getRoleList(this.page)
+      this.page.total = total
+      this.list = rows
+    },
+    changePage(newPage){
+      // newPage是当前点击的对象
+      this.page.page = newPage
+      this.getRoleList()
+      
+    } 
+  }
+}
 </script>
 
 <style>
