@@ -8,6 +8,7 @@
             <!-- 左侧内容 -->
             <el-row style="height: 60px">
               <el-button icon="el-icon-plus" size="small" type="primary"
+              @click="showDialog = true"
                 >新增角色</el-button
               >
             </el-row>
@@ -101,8 +102,8 @@
       </el-card>
     </div>
     <!-- 放置一个弹窗组件 -->
-    <el-dialog title="编辑部门" :visible="showDialog">
-      <el-form :model="roleForm" :rules="rules" label-width="120px">
+    <el-dialog title="编辑部门" :visible="showDialog" @close="btnCncel">
+      <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
        <el-form-item prop="name" label="角色名称">
           <el-input v-model="roleForm.name" />
       </el-form-item> 
@@ -114,8 +115,8 @@
       <!-- 放置footer插槽 -->
       <el-row type="flex" justify="center">
         <el-col :span="8">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确认</el-button>
+          <el-button size="small" @click="btnCncel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOk">确认</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -123,7 +124,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole,getRoleDetail,updateRole,addRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -178,8 +179,39 @@ export default {
         console.log(err)
       }
     },
-    editRole(id){
-        this.showDialog = true
+   async editRole(id){
+       this.roleForm = await getRoleDetail(id)  // 实现数据的回写
+       this.showDialog = true  // 显示图层
+    },
+   async btnOk(){
+    try{
+       await this.$refs.roleForm.validate()
+    //  只有校验通过的情况下才会执行await的下方内容
+    //  有id就是编辑，没有则是新增
+    if(this.roleForm.id){
+       await updateRole(this.roleForm)
+    }else{
+      // 新增业务
+        await addRole(this.roleForm)
+    }
+      //  重新拉取数据
+      this.getRoleList()
+      this.$message.success('操作成功')
+      this.showDialog = false // 关闭弹层
+    }catch(err){
+      console.log(err);
+    }
+    
+
+    },
+    btnCncel(){
+        this.roleForm = {
+          name:'',
+          description:''
+        }
+        // 移除校验规则
+        this.$refs.roleForm.resetFields()
+        this.showDialog = false
     }
   },
   computed: {
