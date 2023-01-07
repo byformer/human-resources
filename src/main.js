@@ -15,8 +15,7 @@ import * as directives from '@/directives' // 导入指令管理
 import '@/icons' // icon
 import '@/permission' // permission control
 import { Object } from 'core-js'
-
-
+import * as filters from "@/filters"
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
@@ -27,7 +26,9 @@ Vue.use(Component) // 注册自己的插件
 Object.keys(directives).forEach(key =>{
     Vue.directive(key,directives[key])  // 注册自定义指令
 })
-
+Object.keys(filters).forEach(key =>{
+  Vue.filter(key,filters[key]) // 注册自定义过滤器
+})
 Vue.config.productionTip = false
 
 new Vue({
