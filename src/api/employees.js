@@ -25,7 +25,15 @@ export function getSimple(){
  export function delEmployee(id) {
   return request({
     url: `/sys/user/${id}`,
-    method: 'delete'
+    method: 'DELETE'
   })
+}
+
+export function addEmployee(data){
+   return request({
+      url:'/sys/user',
+      method:'POST',
+      data
+   })
 }
   
