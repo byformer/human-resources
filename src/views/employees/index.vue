@@ -19,28 +19,35 @@
         <el-table-column type="index" label="序号" sortable="" />
         <el-table-column label="姓名" prop="username" sortable="" />
         <el-table-column label="工号" prop="workNumber" sortable="" />
-        <el-table-column label="聘用形式" prop="formOfEmployment"  :formatter="formatEmployment" sortable="" />
+        <el-table-column
+          label="聘用形式"
+          prop="formOfEmployment"
+          :formatter="formatEmployment"
+          sortable=""
+        />
         <el-table-column label="部门" prop="departmentName" sortable="" />
         <!-- 作用域插槽 + 过滤器 -->
-        <el-table-column label="入职时间" prop="timeOfEntry" sortable="" >
+        <el-table-column label="入职时间" prop="timeOfEntry" sortable="">
           <template v-slot="obj">
             <!-- 将时间进行格式化 -->
-            {{obj.row.timeOfEntry | formatDate}}
+            {{ obj.row.timeOfEntry | formatDate }}
           </template>
         </el-table-column>
         <el-table-column label="账户状态" prop="enableState" sortable="">
-            <template v-slot="obj">
-              <el-switch :value="obj.row.enableState === 1" />
-            </template>
+          <template v-slot="obj">
+            <el-switch :value="obj.row.enableState === 1" />
+          </template>
         </el-table-column>
         <el-table-column label="操作" sortable="" fixed="right" width="280">
-          <template>
+          <template  slot-scope="{ row }">
             <el-button type="text" size="small">查看</el-button>
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
             <el-button type="text" size="small">角色</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="deleteEmployee(row.id)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -59,8 +66,8 @@
 </template>
 
 <script>
-import { getEmployeeList } from '@/api/employees'
-import EmployeeEnum from "@/api/constant/employees"
+import { getEmployeeList, delEmployee } from '@/api/employees'
+import EmployeeEnum from '@/api/constant/employees'
 export default {
   data() {
     return {
@@ -85,14 +92,27 @@ export default {
       this.loading = false
     },
     // 最新的页面
-    changePage(newPage){
+    changePage(newPage) {
       this.page.page = newPage // 赋值最新的页面
       this.getEmployeeList() // 重新拉取数据
     },
     // 格式化聘用形式
-    formatEmployment(row, column, cellValue, index){
-    const obj = EmployeeEnum.hireType.find(item => item.id === cellValue)
+    formatEmployment(row, column, cellValue, index) {
+      const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue)
       return obj ? obj.value : '未知'
+    },
+    // 删除员工
+   async deleteEmployee(id) {
+      try {
+        this.$confirm('确定删除该员工吗')
+        // 点击了确定
+          await delEmployee(id)
+        this.$message.success('删除员工成功')
+      
+        this.getEmployeeList() // 重新拉取数据
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 }
