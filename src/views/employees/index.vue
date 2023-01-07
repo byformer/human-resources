@@ -11,7 +11,7 @@
         <template v-slot:after>
           <el-button size="small" type="success">excel导入</el-button>
           <el-button size="small" type="danger">excel导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
         </template>
       </PageTools>
       <!-- 表格组件 -->
@@ -63,7 +63,8 @@
       </el-row>
     </div>
     <!-- 放置组件弹层 -->
-    <AddEmployee />
+    <!-- sync 修饰符 -->
+    <AddEmployee :show-dialog.sync="showDialog" />
   </div>
 </template>
 
@@ -80,7 +81,8 @@ export default {
         size: 10,
         total: 0 // 分页总数
       },
-      loading: false // 控制遮罩层
+      loading: false, // 控制遮罩层
+      showDialog:false, // 默认是关闭的弹层
     }
   },
   components:{

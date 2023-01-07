@@ -34,7 +34,7 @@
     <el-row type="flex" justify="center" slot="footer">
       <el-col :span="6">
         <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">取消</el-button>
+        <el-button size="small" type="primary">确认</el-button>
       </el-col>
     </el-row>
   </el-dialog>
