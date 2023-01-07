@@ -11,7 +11,7 @@
         <template v-slot:after>
           <el-button size="small" type="success">excel导入</el-button>
           <el-button size="small" type="danger">excel导出</el-button>
-          <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog = true ">新增员工</el-button>
         </template>
       </PageTools>
       <!-- 表格组件 -->

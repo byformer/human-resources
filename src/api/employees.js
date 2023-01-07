@@ -29,6 +29,7 @@ export function getSimple(){
   })
 }
 
+// 新增员工
 export function addEmployee(data){
    return request({
       url:'/sys/user',
