@@ -37,4 +37,16 @@ export function addEmployee(data){
       data
    })
 }
+/** *
+ *  封装一个批量导入员工的接口
+ *
+ * ***/
+
+ export function importEmployee(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'POST',
+    data
+  })
+}
   
