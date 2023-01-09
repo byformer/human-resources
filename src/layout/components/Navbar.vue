@@ -45,6 +45,9 @@ export default {
         defaultImg:require('@/assets/common/head.jpg')
       }
   },
+  created(){
+    console.log(this.defaultImg);
+  },
   components: {
     // Breadcrumb,
     Hamburger,

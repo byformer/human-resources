@@ -72,6 +72,7 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 import AddEmployee from "./components/add-employees"
+import {formatDate} from "@/filters" 
 export default {
   data() {
     return {
@@ -138,21 +139,35 @@ export default {
         // 获取员工的接口
       const {rows} = await getEmployeeList({page:1,size:this.page.total})
         const data= this.formatJson(headers,rows)
+        const multiHeader = [['姓名','主要信息','','','','','部门']]
+        const header = ['姓名', '手机号', '入职日期', '聘用形式', '转正日期', '工号', '部门'] 
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2']
           excel.export_json_to_excel({
             header:Object.keys(headers),
-            data
+            data,
+            filename:'员工资料表',
+            multiHeader,   // 复杂表头
+            merges // 合并选项
           })
       })
     },
   formatJson(headers,rows){
- /*   return rows.map(item =>{
+
+   return rows.map(item =>{
       // item 是一个对象
      return Object.keys(headers).map(key =>{
+      if(headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime'){
+        // 格式化日期
+      return formatDate(item[headers[key]]) 
+      }else if(headers[key] === 'formOfEmployment'){
+       const obj = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
+       return obj ? obj.value : '未知'
+      }
        return item[headers[key]]
       })
 
-    }) */
-    return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
+    })
+    // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
   }
   }
 }
