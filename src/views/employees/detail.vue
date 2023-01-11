@@ -18,8 +18,14 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="个人详情" />
-          <el-tab-pane label="岗位信息" />
+          <el-tab-pane label="个人详情">
+            <!-- 个人详情 -->
+             <component :is="userComponent" />
+          
+          </el-tab-pane>
+          <el-tab-pane label="岗位信息">
+            <component :is="jobInfo" />
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -29,9 +35,13 @@
 <script>
 import {getUserDetailById} from '@/api/user'
 import {saveUserDetailById} from "@/api/employees"
+import UserInfo from './components/userInfo'
+import JobInfo from "./components/jobInfo"
 export default {
   data(){
     return {
+        userComponent:'UserInfo',
+        jobInfo:'JobInfo',
         userId:this.$route.params.id,  // 直接将路由中的参数赋值给data属性
         userInfo:{
             username:'',
@@ -42,6 +52,10 @@ export default {
           { min: 6, max: 9, message: '密码长度6-9位', trigger: 'blur' }]
         }
     }
+  },
+  components:{
+      UserInfo,
+      JobInfo,
   },
   created(){
     this.getUserDetailById()
